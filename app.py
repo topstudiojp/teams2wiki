@@ -1,0 +1,47 @@
+from flask import Flask, request, jsonify
+import requests
+import os
+
+app = Flask(__name__)
+
+BOOKSTACK_URL = os.getenv("BOOKSTACK_URL")
+BOOKSTACK_TOKEN = os.getenv("BOOKSTACK_TOKEN")
+
+@app.route("/teams-to-bookstack", methods=["POST"])
+def handle_post():
+    data = request.json
+    message = data.get("message", "")
+    book_name = data.get("channel", "Inbox")
+
+    # Book ID を取得
+    books = requests.get(f"{BOOKSTACK_URL}/api/books", headers={
+        "Authorization": f"Token {BOOKSTACK_TOKEN}"
+    }).json()
+
+    book = next((b for b in books.get("data", []) if b["name"] == book_name), None)
+    
+    # Bookが存在しない場合は新規作成
+    if not book:
+        # 新しいBookを作成
+        new_book_response = requests.post(f"{BOOKSTACK_URL}/api/books", headers={
+            "Authorization": f"Token {BOOKSTACK_TOKEN}"
+        }, json={
+            "name": book_name,
+            "description": f"Created for channel: {book_name}"
+        })
+        
+        if new_book_response.status_code != 200:
+            return jsonify({"error": "Book creation failed"}), new_book_response.status_code
+            
+        book = new_book_response.json()
+
+    # ページを作成
+    page = requests.post(f"{BOOKSTACK_URL}/api/pages", headers={
+        "Authorization": f"Token {BOOKSTACK_TOKEN}"
+    }, json={
+        "book_id": book["id"],
+        "name": message[:40],  # タイトルに使う（先頭40文字）
+        "markdown": message
+    })
+
+    return jsonify(page.json()), page.status_code
