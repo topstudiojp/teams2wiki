@@ -30,8 +30,10 @@ def handle_post():
             "description": f"Created for channel: {book_name}"
         })
         
-        if new_book_response.status_code != 200:
-            return jsonify({"error": "Book creation failed"}), new_book_response.status_code
+        if new_book_response.status_code not in [200, 201]:
+            print(f"BookStack API Error: {new_book_response.status_code}")
+            print(f"Response: {new_book_response.text}")
+            return jsonify({"error": "Book creation failed", "details": new_book_response.text}), new_book_response.status_code
             
         book = new_book_response.json()
 
