@@ -5,7 +5,8 @@ import os
 app = Flask(__name__)
 
 BOOKSTACK_URL = os.getenv("BOOKSTACK_URL")
-BOOKSTACK_TOKEN = os.getenv("BOOKSTACK_TOKEN")
+BOOKSTACK_TOKEN_ID = os.getenv("BOOKSTACK_TOKEN_ID")
+BOOKSTACK_TOKEN_SECRET = os.getenv("BOOKSTACK_TOKEN_SECRET")
 
 @app.route("/teams-to-bookstack", methods=["POST"])
 def handle_post():
@@ -15,7 +16,7 @@ def handle_post():
 
     # Book ID を取得
     books = requests.get(f"{BOOKSTACK_URL}/api/books", headers={
-        "Authorization": f"Token {BOOKSTACK_TOKEN}"
+        "Authorization": f"Token {BOOKSTACK_TOKEN_ID}:{BOOKSTACK_TOKEN_SECRET}"
     }).json()
 
     book = next((b for b in books.get("data", []) if b["name"] == book_name), None)
@@ -24,7 +25,7 @@ def handle_post():
     if not book:
         # 新しいBookを作成
         new_book_response = requests.post(f"{BOOKSTACK_URL}/api/books", headers={
-            "Authorization": f"Token {BOOKSTACK_TOKEN}"
+            "Authorization": f"Token {BOOKSTACK_TOKEN_ID}:{BOOKSTACK_TOKEN_SECRET}"
         }, json={
             "name": book_name,
             "description": f"Created for channel: {book_name}"
@@ -39,7 +40,7 @@ def handle_post():
 
     # ページを作成
     page = requests.post(f"{BOOKSTACK_URL}/api/pages", headers={
-        "Authorization": f"Token {BOOKSTACK_TOKEN}"
+        "Authorization": f"Token {BOOKSTACK_TOKEN_ID}:{BOOKSTACK_TOKEN_SECRET}"
     }, json={
         "book_id": book["id"],
         "name": message[:40],  # タイトルに使う（先頭40文字）
