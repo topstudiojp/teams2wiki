@@ -50,4 +50,26 @@ def handle_compose_action():
 
     page = page_response.json()
 
-return "", 200
+
+    return jsonify({
+        "composeExtension": {
+            "type": "result",
+            "attachmentLayout": "list",
+            "attachments": [
+                {
+                    "contentType": "application/vnd.microsoft.card.hero",
+                    "content": {
+                        "title": "BookStackへ送信完了",
+                        "text": f"ページ: {page['name']} を作成しました。",
+                        "buttons": [
+                            {
+                                "type": "openUrl",
+                                "title": "開く",
+                                "value": page["url"]
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    })
