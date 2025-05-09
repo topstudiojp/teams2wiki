@@ -37,10 +37,11 @@ def handle_compose_action():
 
         book = new_book_response.json()
 
-    page_response = requests.post(f"{BOOKSTACK_URL}/api/books/{book['id']}/pages", headers={
+    page_response = requests.post(f"{BOOKSTACK_URL}/api/pages", headers={
         "Authorization": f"Token {BOOKSTACK_TOKEN_ID}:{BOOKSTACK_TOKEN_SECRET}"
     }, json={
-        "name": "Teamsメッセージ",
+        "book_id": book["id"],
+        "name": message[:40],
         "markdown": message
     })
 
