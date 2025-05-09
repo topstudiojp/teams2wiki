@@ -47,4 +47,26 @@ def handle_post():
         "markdown": message
     })
 
-    return jsonify(page.json()), page.status_code
+    return jsonify({
+        "composeExtension": {
+            "type": "result",
+            "attachmentLayout": "list",
+            "attachments": [
+                {
+                    "contentType": "application/vnd.microsoft.card.hero",
+                    "content": {
+                        "title": "BookStackへ送信完了",
+                        "text": f"ページ: {page['name']} を作成しました。",
+                        "buttons": [
+                            {
+                                "type": "openUrl",
+                                "title": "開く",
+                                "value": page["url"]
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }), 200
+
