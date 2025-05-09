@@ -8,6 +8,11 @@ BOOKSTACK_URL = os.getenv("BOOKSTACK_URL")
 BOOKSTACK_TOKEN_ID = os.getenv("BOOKSTACK_TOKEN_ID")
 BOOKSTACK_TOKEN_SECRET = os.getenv("BOOKSTACK_TOKEN_SECRET")
 
+@app.route("/api/messages", methods=["POST"])
+def dummy_messages():
+    return jsonify({"status": "received"}), 200
+
+
 @app.route("/teams-to-bookstack", methods=["POST"])
 def handle_compose_action():
     data = request.json
