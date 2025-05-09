@@ -64,7 +64,7 @@ def handle_compose_action():
                             {
                                 "type": "openUrl",
                                 "title": "開く",
-                                "value": page["url"]
+                                "value": f"{BOOKSTACK_URL}/books/{book['slug']}/page/{page['slug']}"
                             }
                         ]
                     }
