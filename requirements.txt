@@ -1,3 +1,6 @@
-Flask
-requests
 gunicorn
+botbuilder-core
+botbuilder-schema
+botbuilder-integration-aiohttp
+aiohttp
+requests
