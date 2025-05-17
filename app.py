@@ -13,7 +13,7 @@ from botbuilder.core.teams import TeamsActivityHandler, TeamsMessagingExtensions
 BOOKSTACK_URL = os.getenv("BOOKSTACK_URL")
 BOOKSTACK_TOKEN_ID = os.getenv("BOOKSTACK_TOKEN_ID")
 BOOKSTACK_TOKEN_SECRET = os.getenv("BOOKSTACK_TOKEN_SECRET")
-MICROSOFT_APP_ID = os.getenv("MICROSOFT_APP_ID")！
+MICROSOFT_APP_ID = os.getenv("MICROSOFT_APP_ID")
 MICROSOFT_APP_PASSWORD = os.getenv("MICROSOFT_APP_PASSWORD")
 
 class TeamsBookStackBot(TeamsActivityHandler):
