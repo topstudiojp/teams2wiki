@@ -7,7 +7,8 @@ from botbuilder.core import (
     TurnContext,
 )
 from botbuilder.core.integration import aiohttp_error_middleware
-from botbuilder.core.teams import TeamsActivityHandler, TeamsMessagingExtensionsAction
+from botbuilder.core.teams import TeamsActivityHandler
+from botbuilder.schema.teams import MessagingExtensionAction
 
 # 環境変数
 BOOKSTACK_URL = os.getenv("BOOKSTACK_URL")
@@ -18,7 +19,7 @@ MICROSOFT_APP_PASSWORD = os.getenv("MICROSOFT_APP_PASSWORD")
 
 class TeamsBookStackBot(TeamsActivityHandler):
     async def on_teams_messaging_extension_submit_action(
-        self, turn_context: TurnContext, action: TeamsMessagingExtensionsAction
+        self, turn_context: TurnContext, action: MessagingExtensionAction
     ):
         try:
             # メッセージ本文取得
