@@ -97,27 +97,26 @@ class TeamsBookStackBot(TeamsActivityHandler):
                 }
             }
 
-# Bot とサーバー起動設定
+# Bot Framework Adapter と Aiohttp アプリケーションの設定
+settings = BotFrameworkAdapterSettings(MICROSOFT_APP_ID, MICROSOFT_APP_PASSWORD)
+adapter = BotFrameworkAdapter(settings)
+bot = TeamsBookStackBot()
+
+app = web.Application(middlewares=[aiohttp_error_middleware])
+app.router.add_post(
+    "/api/messages", 
+    lambda req: adapter.process_activity(
+        req, bot.on_turn, req.headers.get("Authorization", ""),
+    ),
+)
+app.router.add_post(
+    "/teams-to-bookstack", 
+    lambda req: adapter.process_activity(
+        req, bot.on_turn, req.headers.get("Authorization", ""),
+    ),
+)
+
+# ローカル実行用
 if __name__ == "__main__":
-    settings = BotFrameworkAdapterSettings(MICROSOFT_APP_ID, MICROSOFT_APP_PASSWORD)
-    adapter = BotFrameworkAdapter(settings)
-    bot = TeamsBookStackBot()
-
-    app = web.Application(middlewares=[aiohttp_error_middleware])
-    # Bot Framework メッセージ受信用
-    app.router.add_post(
-        "/api/messages", 
-        lambda req: adapter.process_activity(
-            req, bot.on_turn, req.headers.get("Authorization", ""),
-        ),
-    )
-    # Compose Extension アクション受信用
-    app.router.add_post(
-        "/teams-to-bookstack", 
-        lambda req: adapter.process_activity(
-            req, bot.on_turn, req.headers.get("Authorization", ""),
-        ),
-    )
-
     port = int(os.getenv("PORT", 3978))
     web.run_app(app, host="0.0.0.0", port=port)
